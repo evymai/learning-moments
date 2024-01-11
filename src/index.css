@@ -125,3 +125,8 @@ table {
   border-spacing: 0;
 }
 
+.page-title{
+  font-size: 28px;
+  text-align: center;
+  padding: 25px;
+}

@@ -1,0 +1,19 @@
+.all-posts{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content:space-evenly;
+    align-items:center;
+}
+.post{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin: 10px;
+    width: 25%;
+    text-align: center;
+    height: 20vh;
+    padding: 20px;
+    border-radius: 10px;
+    border: solid 1px black;
+}
