@@ -1,21 +1,19 @@
 import { useEffect, useState } from "react"
 import { getAllPosts } from "../../services/postService"
 import { getTopics } from "../../services/topicService"
-import { getLikes } from "../../services/likeService"
 import "./AllPosts.css"
-import { render } from "@testing-library/react"
+import { Link } from "react-router-dom"
 export const AllPosts = () => {
   const [allPosts, setAllPosts] = useState([])
-  const [allLikes, setAllLikes] = useState([])
   const [allTopics, setAllTopics] = useState([])
   const [filteredTopicPosts, setFilteredTopicPosts] = useState([])
   const [topicSelection, setTopicSelection] = useState("")
   const [postSearch, setPostSearch] = useState("")
 
-  const renderPosts = () => {
-    getAllPosts().then((postArray) => {
-      setAllPosts(postArray)
-    })
+  const renderPosts = async () => {
+    const postArray = await getAllPosts()
+    setAllPosts(postArray)
+    setFilteredTopicPosts(postArray)
   }
   const handleDropdownChange = (event) => {
     setTopicSelection(event.target.value)
@@ -27,15 +25,7 @@ export const AllPosts = () => {
   }
 
   useEffect(() => {
-    getAllPosts().then((postArray) => {
-      setAllPosts(postArray)
-    })
-    getAllPosts().then((postArray) => {
-      setFilteredTopicPosts(postArray)
-    })
-    getLikes().then((likesArray) => {
-      setAllLikes(likesArray)
-    })
+    renderPosts()
     getTopics().then((topicsArray) => {
       setAllTopics(topicsArray)
     })
@@ -57,7 +47,7 @@ export const AllPosts = () => {
       post.title.toLowerCase().includes(postSearch.toLowerCase())
     )
     setFilteredTopicPosts(searchResult)
-  })
+  }, [allPosts, postSearch])
 
   return (
     <div className="posts-container">
@@ -72,7 +62,7 @@ export const AllPosts = () => {
           </option>
           {allTopics.map((topicObj) => {
             return (
-              <option className="topic" value={topicObj.id}>
+              <option className="topic" value={topicObj.id} key={topicObj.id}>
                 {topicObj.name}
               </option>
             )
@@ -90,25 +80,13 @@ export const AllPosts = () => {
       </div>
       <div className="all-posts">
         {filteredTopicPosts.map((postObj) => {
-          let likeCount = 0
-          let postTopic = ""
-          allLikes.map((likeObj) => {
-            if (likeObj.postId === postObj.id) {
-              likeCount++
-            }
-            return likeCount
-          })
-          allTopics.map((topicObj) => {
-            if (topicObj.id === postObj.topicId) {
-              postTopic = topicObj.name
-            }
-            return postTopic
-          })
           return (
-            <div className="post">
-              <div className="post-title">{postObj.title}</div>
-              <div className="post-topic">{postTopic}</div>
-              <div className="post-likes">{likeCount}</div>
+            <div className="post" key={postObj.id}>
+              <Link className="post-title" to={`/posts/${postObj.id}`}>
+                <div >{postObj.title}</div>
+              </Link>
+              <div className="post-topic">{postObj.topic?.name}</div>
+              <div className="post-likes">Likes: {postObj.likes?.length}</div>
             </div>
           )
         })}

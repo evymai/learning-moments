@@ -1,0 +1,21 @@
+.my-post{
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    margin-top: 40px;
+    padding: 20px;
+    width: 60%;
+    justify-content:space-between;
+    align-items:center;
+    border: solid black 2px;
+    border-radius: 10px;
+}
+
+.post-title{
+    text-decoration: none;
+    color: black;
+}
+
+.post-title:hover{
+    color: seagreen;
+}
